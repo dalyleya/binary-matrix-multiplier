@@ -2,23 +2,28 @@ package matrix.operation;
 
 import matrix.entity.Matrix;
 import matrix.entity.MatrixHelper;
+import org.apache.log4j.Logger;
 
 public class MatrixMultiplier {
 
-    public int[][] multiplyAndTrace(Matrix a, Matrix b, boolean isParallel) {
+    private final static Logger logger = Logger.getLogger(MatrixMultiplier.class);
+
+    public int[][] multiplyAndTrace(Matrix a, Matrix b) {
         long time = System.currentTimeMillis();
-        int[][] resultMatrix = multiplyMatrices(a, b, isParallel);
+        int[][] resultMatrix = multiplyMatricesSequentially(a, b);
         time = System.currentTimeMillis() - time;
-        System.out.printf("Multiplication operation took %d milliseconds..\n", time);
+        logger.info(String.format("Sequential multiplication took %d milliseconds..\n", time));
         return resultMatrix;
     }
 
-    public int[][] multiplyMatrices(Matrix a, Matrix b, boolean isParallel) {
+    public int[][] multiplyMatricesSequentially(Matrix a, Matrix b) {
         int size = a.getN();
-        boolean[][] resultMatrix = new boolean[size][size];
-        if (isParallel) {
+        boolean[][] resultMatrix = multiplyInOneThread(a, b, size);
+        return MatrixHelper.transformToDigitMatrix(resultMatrix);
+    }
 
-        }
+    private boolean[][] multiplyInOneThread(Matrix a, Matrix b, int size) {
+        boolean[][] resultMatrix = new boolean[size][size];
         boolean[][] matrixA = a.getBoolMatrix();
         boolean[][] matrixB = b.getBoolMatrix();
         for (int i = 0; i < size; i++) {
@@ -34,8 +39,7 @@ public class MatrixMultiplier {
                 }
             }
         }
-
-        return MatrixHelper.transformToDigitMatrix(resultMatrix);
+        return resultMatrix;
     }
 
     // 1^0 = 1
