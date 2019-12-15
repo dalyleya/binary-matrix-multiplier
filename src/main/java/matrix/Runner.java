@@ -5,14 +5,10 @@ import matrix.entity.NotSuitableMatrixSizeException;
 import matrix.entity.WrongInputDataException;
 import matrix.helper.ReadWriteHelper;
 import matrix.operation.MatrixMultiplier;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Runner {
 
@@ -30,7 +26,7 @@ public class Runner {
             if (methodInput.equalsIgnoreCase("r")) {
 
                 System.out.println("Insert path to file");
-                //Example: C:\\Users\\user\\IdeaProjects\\MatrixOperations\\src\\main\\resources\\input.txt
+                //Example: src\\main\\resources\\input\\input.txt
                 String pathName = scanner.next();
 
                 System.out.println("Matrix size [1..10000]");
@@ -40,12 +36,17 @@ public class Runner {
                 generateTwoMatricesAndWriteToFile(size, pathName);
 
             } else if (methodInput.equalsIgnoreCase("f")) {
+
                 System.out.println("Insert path to input file");
-                //Example: C:\\Users\\user\\IdeaProjects\\MatrixOperations\\src\\main\\resources\\input.txt
+//              Example "src\\main\\resources\\matrix\\input\\input4.txt";
                 String pathName = scanner.next();
-                System.out.println("Insert path output to file");
-                //Example: C:\\Users\\user\\IdeaProjects\\MatrixOperations\\src\\main\\resources\\output.txt
-                String outputPathName = scanner.next();
+                System.out.println("Insert path output to file for sequential multiplication");
+//              Example "src\\main\\resources\\matrix\\output\\output4_1.txt";
+                String sOutputPath = scanner.next();
+
+                System.out.println("Insert path output to file for parallel multiplication");
+//              Example "src\\main\\resources\\matrix\\output\\output4_2.txt";
+                String pOutputPath = scanner.next();
 
                 File file = new File(pathName);
                 Scanner fileScanner = new Scanner(file);
@@ -57,9 +58,10 @@ public class Runner {
                 Matrix matrixB = ReadWriteHelper.readMatrix(fileScanner, size);
 
                 MatrixMultiplier matrixMultiplier = new MatrixMultiplier();
-                int[][] result = matrixMultiplier.multiplyAndTrace(matrixA, matrixB);
 
-                ReadWriteHelper.writeOutputMatrixToFile(outputPathName, size, result);
+                multiplyAndTrace(sOutputPath, matrixA, matrixB, matrixMultiplier, false);
+                multiplyAndTrace(pOutputPath, matrixA, matrixB, matrixMultiplier, true);
+
             }
         } catch (NotSuitableMatrixSizeException e) {
             logger.error(String.format("Wrong matrix size %d. Should be above 0. \n", size));
@@ -68,6 +70,21 @@ public class Runner {
         } catch (WrongInputDataException e) {
             logger.error("Wrong input data");
         }
+    }
+
+    private static void multiplyAndTrace(String outputPath, Matrix matrixA, Matrix matrixB,
+                                         MatrixMultiplier matrixMultiplier, boolean isParallel) {
+        long time = System.currentTimeMillis();
+        int[][] result;
+        result = (isParallel) ?
+                matrixMultiplier.multiplyMatricesInParallel(matrixA, matrixB) :
+                matrixMultiplier.multiplyMatricesSequentially(matrixA, matrixB);
+
+        time = System.currentTimeMillis() - time;
+        String multType = (isParallel) ? "Parallel" : "Sequential";
+        logger.info(String.format("%s multiplication took %d milliseconds..\n", multType, time));
+        ReadWriteHelper.writeOutputMatrixToFile(outputPath, matrixA.getN(), result);
+        logger.info(String.format("%s multiplication was written to file %s \n", multType, outputPath));
     }
 
     private static void checkSize(int size) throws NotSuitableMatrixSizeException {

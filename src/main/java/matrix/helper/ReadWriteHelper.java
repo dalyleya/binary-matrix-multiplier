@@ -21,9 +21,9 @@ public class ReadWriteHelper {
             int[][] a = matrixA.getIntMatrix();
             int[][] b = matrixB.getIntMatrix();
             writer.println(size);
-            printMatrixToWriter(size, writer, a);
+            printMatrixToWriter(writer, a);
             writer.println();
-            printMatrixToWriter(size, writer, b);
+            printMatrixToWriter(writer, b);
         } catch (IOException e) {
             logger.error(String.format("Wrong file location %s \n", fileName));
         }
@@ -32,14 +32,22 @@ public class ReadWriteHelper {
     public static void writeOutputMatrixToFile(String fileName, int size, int[][] matrix) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, false))) {
             writer.println(size);
-            printMatrixToWriter(size, writer, matrix);
+            printMatrixToWriter(writer, matrix);
         } catch (IOException e) {
             logger.error(String.format("Wrong file location %s \n", fileName));
         }
     }
 
-    private static void printMatrixToWriter(int size, PrintWriter writer, int[][] a) {
-        for (int i = 0; i < size; i++) {
+    public static void appendMatrixToFile(String fileName, int[][] matrix) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, false))) {
+            printMatrixToWriter(writer, matrix);
+        } catch (IOException e) {
+            logger.error(String.format("Wrong file location %s \n", fileName));
+        }
+    }
+
+    private static void printMatrixToWriter(PrintWriter writer, int[][] a) {
+        for (int i = 0; i < a.length; i++) {
             writer.println(Arrays.stream(a[i])
                     .mapToObj(String::valueOf)
                     .collect(Collectors.joining(" ")));
