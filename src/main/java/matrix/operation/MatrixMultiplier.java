@@ -1,7 +1,7 @@
 package matrix.operation;
 
 import matrix.entity.Matrix;
-import matrix.entity.MatrixHelper;
+import matrix.internal.MatrixHelper;
 import org.apache.log4j.Logger;
 
 import java.util.concurrent.ExecutorService;
@@ -12,13 +12,17 @@ public class MatrixMultiplier {
 
     private final static Logger logger = Logger.getLogger(MatrixMultiplier.class);
 
-
+    /**
+     * Multiplies two matrices in several threads and return result
+     * @param a first matrix to multiply
+     * @param b first matrix to multiply
+     * @return Matrix of ints with 0 or 1 value
+     */
     public int[][] multiplyMatricesInParallel(Matrix a, Matrix b) {
         int size = a.getN();
         boolean[][] resultMatrix = multiplyInSeveralThreads(a, b, size);
         return MatrixHelper.transformToDigitMatrix(resultMatrix);
     }
-
 
     private boolean[][] multiplyInSeveralThreads(Matrix a, Matrix b, int size) {
         boolean[][] resultMatrix = new boolean[size][size];
@@ -38,11 +42,9 @@ public class MatrixMultiplier {
                         for (k = 1; k < size; k++) {
                             resultMatrix[finalI][finalJ] = addTwoCells(resultMatrix[finalI][finalJ],
                                     multiplyTwoCells(matrixA[finalI][k], matrixB[k][finalJ]));
-
                         }
                     }
                 });
-
 
             }
         }
@@ -58,6 +60,12 @@ public class MatrixMultiplier {
         return resultMatrix;
     }
 
+    /**
+     * Multiplies two matrices sequentially and return result
+     * @param a first matrix to multiply
+     * @param b first matrix to multiply
+     * @return Matrix of ints with 0 or 1 value
+     */
     public int[][] multiplyMatricesSequentially(Matrix a, Matrix b) {
         int size = a.getN();
         boolean[][] resultMatrix = multiplyInOneThread(a, b, size);

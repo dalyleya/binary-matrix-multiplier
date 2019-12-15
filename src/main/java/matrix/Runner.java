@@ -2,8 +2,7 @@ package matrix;
 
 import matrix.entity.Matrix;
 import matrix.entity.NotSuitableMatrixSizeException;
-import matrix.entity.WrongInputDataException;
-import matrix.helper.ReadWriteHelper;
+import matrix.internal.ReadWriteHelper;
 import matrix.operation.MatrixMultiplier;
 import org.apache.log4j.Logger;
 
@@ -67,8 +66,6 @@ public class Runner {
             logger.error(String.format("Wrong matrix size %d. Should be above 0. \n", size));
         } catch (FileNotFoundException e) {
             logger.error("Wrong filename");
-        } catch (WrongInputDataException e) {
-            logger.error("Wrong input data");
         }
     }
 

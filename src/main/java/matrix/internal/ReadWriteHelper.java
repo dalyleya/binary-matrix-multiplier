@@ -1,7 +1,6 @@
-package matrix.helper;
+package matrix.internal;
 
 import matrix.entity.Matrix;
-import matrix.entity.WrongInputDataException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -55,7 +54,7 @@ public class ReadWriteHelper {
         }
     }
 
-    public static Matrix readMatrix(Scanner scanner, int size) throws WrongInputDataException {
+    public static Matrix readMatrix(Scanner scanner, int size) {
         int[][] digits = new int[size][];
         int lineCount = 0;
         while (scanner.hasNextLine() &&
@@ -64,7 +63,7 @@ public class ReadWriteHelper {
             if (StringUtils.isNotBlank(strLine)) {
                 String[] strGidits = strLine.split(" ");
                 if (strGidits.length != size) {
-                    throw new WrongInputDataException();
+                    throw new IllegalArgumentException();
                 }
                 int[] array = Arrays.stream(strGidits)
                         .mapToInt(Integer::parseInt)

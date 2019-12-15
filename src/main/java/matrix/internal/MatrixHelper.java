@@ -1,4 +1,4 @@
-package matrix.entity;
+package matrix.internal;
 
 import java.util.Random;
 

@@ -1,5 +1,7 @@
 package matrix.entity;
 
+import matrix.internal.MatrixHelper;
+
 import java.util.Arrays;
 
 
@@ -7,6 +9,11 @@ public class Matrix {
     private int n;// dimension
     private boolean[][] matrix;
 
+    /**
+     * Create new Matrix with given data
+     * @param n array side dimension
+     * @param intMatrix matrix with 0 and 1 as possible values
+     */
     public Matrix(int n, int[][] intMatrix) {
         this.n = n;
         this.matrix = MatrixHelper.transformToBoolMatrix(intMatrix);
