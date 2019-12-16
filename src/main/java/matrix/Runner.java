@@ -37,14 +37,14 @@ public class Runner {
             } else if (methodInput.equalsIgnoreCase("f")) {
 
                 System.out.println("Insert path to input file");
-//              Example "src\\main\\resources\\matrix\\input\\input4.txt";
+//              Example "src\\main\\resources\\matrix\\input\\input1.txt";
                 String pathName = scanner.next();
                 System.out.println("Insert path output to file for sequential multiplication");
-//              Example "src\\main\\resources\\matrix\\output\\output4_1.txt";
+//              Example "src\\main\\resources\\matrix\\output\\output1_1.txt";
                 String sOutputPath = scanner.next();
 
                 System.out.println("Insert path output to file for parallel multiplication");
-//              Example "src\\main\\resources\\matrix\\output\\output4_2.txt";
+//              Example "src\\main\\resources\\matrix\\output\\output1_2.txt";
                 String pOutputPath = scanner.next();
 
                 File file = new File(pathName);
